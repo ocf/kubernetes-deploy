@@ -10,6 +10,7 @@ ADD https://storage.googleapis.com/kubernetes-release/release/${KUBERNETES_VERSI
 RUN chmod +x /usr/local/bin/kubectl
 
 COPY deploy.sh /usr/local/bin
+COPY generate-namespace.py /usr/local/bin
 
 volume /kubeconfig
 volume /input
