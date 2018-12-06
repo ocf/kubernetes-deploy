@@ -11,4 +11,4 @@ cook-image: Dockerfile deploy.sh generate-namespace.py
 .PHONY: push-image
 push-image:
 	docker tag $(DOCKER_TAG) $(DOCKER_LATEST)
-	docker push $(DOCKER_LATEST)
+	docker push $(DOCKER_NAME)
