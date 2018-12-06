@@ -1,7 +1,8 @@
 DOCKER_REPO ?=
 DOCKER_REVISION ?= kubernetes-deploy-testing-$(USER)
-DOCKER_TAG = $(DOCKER_REPO)kube-deploy:$(DOCKER_REVISION)
-DOCKER_LATEST = $(DOCKER_REPO)kube-deploy:latest
+DOCKER_NAME = $(DOCKER_REPO)kube-deploy
+DOCKER_TAG = $(DOCKER_NAME):$(DOCKER_REVISION)
+DOCKER_LATEST = $(DOCKER_NAME):latest
 
 .PHONY: cook-image
 cook-image: Dockerfile deploy.sh generate-namespace.py
@@ -9,5 +10,5 @@ cook-image: Dockerfile deploy.sh generate-namespace.py
 
 .PHONY: push-image
 push-image:
-	docker tag $(DOCKER_LATEST) $(DOCKER_TAG)
-	docker push $(DOCKER_TAG)
+	docker tag $(DOCKER_TAG) $(DOCKER_LATEST)
+	docker push $(DOCKER_NAME)
