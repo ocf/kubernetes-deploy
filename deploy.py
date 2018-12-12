@@ -19,7 +19,7 @@ def main():
     j = {
         'apiVersion': 'v1',
         'kind': 'Namespace',
-        'metadata': {'name': sys.argv[1]},
+        'metadata': {'name': namespace_name},
     }
 
     subprocess.run(
