@@ -1,9 +1,19 @@
 #!/usr/bin/env python3
+'''
+Deploys Kubernetes templates from the current directory. Creates a namespace
+based on the app name, and runs kubernetes-deploy.
+'''
 
 import argparse
 import json
+import os
 import subprocess
 import sys
+
+def get_current_context():
+    return subprocess.check_output(
+        ['kubectl', 'config', 'current-context']
+    ).decode().strip()
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -13,10 +23,20 @@ def main():
         help='The version of the app, usually the docker tag.',
     )
     parser.add_argument(
-        '--template-dir',
-        default='.',
-        help='The directory with Kubernetes templates. Default is cwd.',
+        '--kube-context',
+        default=get_current_context(),
+        help='The Kubernetes context to use. Defaults to the current context.',
     )
+
+    # We don't specify the default here because this gets run from within a
+    # docker container, which might not be able to see the .git folder. Instead,
+    # the default gets passed in by the ocf-kubernetes-deploy script.
+    parser.add_argument(
+        '--revision',
+        help=('The Git commit hash to be deployed, required by'
+            + 'kubernetes-deploy. Defaults to the current Git revision.'),
+    )
+
     args = parser.parse_args()
 
     namespace_name = 'app-' + args.appname
@@ -36,11 +56,16 @@ def main():
         'version': args.version,
     }
 
-    subprocess.run([
-        'kubernetes-deploy', namespace_name, 'k8s',
-        '--template-dir', args.template_dir,
-        '--bindings='+json.dumps(bindings),
-    ]).check_returncode()
+    subprocess.run(
+        [
+            'kubernetes-deploy',
+            namespace_name,
+            args.kube_context,
+            '--template-dir', '.',
+            '--bindings=' + json.dumps(bindings),
+        ],
+        env={**os.environ, 'REVISION': args.revision},
+    ).check_returncode()
 
 if __name__ == '__main__':
     try:
