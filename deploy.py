@@ -10,7 +10,12 @@ def main():
     parser.add_argument('appname', help='The name of the app to deploy')
     parser.add_argument(
         'version',
-        help='The version of the app, usually the docker tag.'
+        help='The version of the app, usually the docker tag.',
+    )
+    parser.add_argument(
+        '--template-dir',
+        default='.',
+        help='The directory with Kubernetes templates. Default is cwd.',
     )
     args = parser.parse_args()
 
@@ -31,10 +36,11 @@ def main():
         'version': args.version,
     }
 
-    subprocess.run(
-        ['kubernetes-deploy', namespace_name, 'k8s',
-        '--template-dir', '.', '--bindings='+json.dumps(bindings)]
-    ).check_returncode()
+    subprocess.run([
+        'kubernetes-deploy', namespace_name, 'k8s',
+        '--template-dir', args.template_dir,
+        '--bindings='+json.dumps(bindings),
+    ]).check_returncode()
 
 if __name__ == '__main__':
     try:
