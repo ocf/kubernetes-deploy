@@ -56,6 +56,10 @@ def main():
         'version': args.version,
     }
 
+    env = os.environ.copy()
+    if args.revision:
+        env['REVISION'] = args.revision
+
     subprocess.run(
         [
             'kubernetes-deploy',
@@ -64,7 +68,7 @@ def main():
             '--template-dir', '.',
             '--bindings=' + json.dumps(bindings),
         ],
-        env={**os.environ, 'REVISION': args.revision},
+        env=env,
     ).check_returncode()
 
 if __name__ == '__main__':
