@@ -1,7 +1,5 @@
-This repo builds the Docker image for deploying Kubernetes apps. The docker image will mainly be run from Jenkins pipelines.
+This repo "packages" Shopify's [`kubernetes-deploy`](https://github.com/Shopify/kubernetes-deploy) as a Docker image. This image shouldn't be called on its own. Instead, it should be called by the `ocf-kubernetes-deploy` in `utils`.
 
-It takes the following as inputs:
+The image takes the following as inputs:
 * Volume: `/input`: the directory which holds Kubernetes resource files or templates.
 * Volume: `/kubeconfig`: the `KUBECONFIG` file to use. Note that this should be a file, not a directory.
-* Environment variable: `$REVISION`: the git commit SHA being deployed.
-* Command line arguments: `appname` `version` (where `version` is the docker tag to use).

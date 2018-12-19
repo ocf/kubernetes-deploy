@@ -5,7 +5,7 @@ DOCKER_TAG = $(DOCKER_NAME):$(DOCKER_REVISION)
 DOCKER_LATEST = $(DOCKER_NAME):latest
 
 .PHONY: cook-image
-cook-image: Dockerfile deploy.py
+cook-image: Dockerfile
 	docker build -t $(DOCKER_TAG) -f Dockerfile .
 
 .PHONY: push-image

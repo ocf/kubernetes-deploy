@@ -15,5 +15,10 @@ volume /kubeconfig
 volume /input
 
 ENV KUBECONFIG=/kubeconfig
+
+# kubernetes-deploy requires that this environment variable be set, and passes
+# it to templates as the `current_sha` variable. We don't ever use it.
+ENV REVISION=unused
+
 WORKDIR /input
-ENTRYPOINT ["deploy.py"]
+ENTRYPOINT ["kubernetes-deploy", "--template-dir=/input"]
