@@ -9,8 +9,6 @@ RUN apt-get update \
 ADD https://storage.googleapis.com/kubernetes-release/release/${KUBERNETES_VERSION}/bin/linux/amd64/kubectl /usr/local/bin/kubectl
 RUN chmod +x /usr/local/bin/kubectl
 
-COPY deploy.py /usr/local/bin
-
 volume /kubeconfig
 volume /input
 
